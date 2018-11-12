@@ -1,7 +1,5 @@
 <template>
-  <div v-bind:class="$style.container">
-    <img v-bind:src="image" />
-  </div>
+  <div v-bind:class="$style.container" />
 </template>
 
 <script>

@@ -1,24 +1,38 @@
+https://css-tricks.com/drag-and-drop-file-uploading/
+
 <template>
   <div v-bind:class="$style.container">
-    <form v-bind:class="$style.form" action="">
+    <form
+      v-bind:class="$style.form"
+      action=""
+      @change="onChange($event)"
+      @dragenter="onDragEnter"
+      @dragleave="onDragLeave"
+      @drop.prevent="onDrop($event)"
+      @dragover.prevent=""
+    >
       <input
         type="file"
         name="file-upload"
         id="file-upload"
+        v-bind:class="$style.fileUpload"
+      />
+      <label
         v-bind:class="{
-          [$style.fileUpload]: true,
+          [$style.label]: true,
           [$style.active]: draggingFileOverTarget,
         }"
-        @change="onChange($event)"
-        @dragenter="onDragEnter"
-        @dragleave="onDragLeave"
-        @drop="onDrop"
-      />
-      <label v-bind:class="$style.label" for="file-upload">
-        <p>
+        for="file-upload"
+      >
+        <p v-if="advancedUpload">
           Drop image<br/>
           here<br/>
           or <span>click</span> to<br/>
+          plant a<br/>
+          Tree
+        </p>
+        <p v-else>
+          <span>click</span> to<br/>
           plant a<br/>
           Tree
         </p>
@@ -38,7 +52,13 @@ export default {
     image: '',
     loading: false,
     error: null,
+    advancedUpload: false,
   }),
+  created() {
+    const div = document.createElement('div');
+    const isAdvanced = (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
+    if (isAdvanced) this.advancedUpload = true;
+  },
   methods: {
     async onChange(e) {
       this.file = e.target.value;
@@ -50,8 +70,9 @@ export default {
     onDragLeave() {
       this.draggingFileOverTarget = false;
     },
-    onDrop() {
+    async onDrop(e) {
       this.draggingFileOverTarget = false;
+      await this.uploadFile(e.dataTransfer.files[0]);
     },
     async uploadFile(file) {
       const reader = new FileReader();
@@ -87,8 +108,6 @@ export default {
 </script>
 
 <style module lang="scss">
-  // .container {}
-
   .form {
     display: flex;
     align-items: center;
