@@ -4,8 +4,6 @@
       v-bind:class="$style.form"
       action=""
       @change="onChange($event)"
-      @dragenter="onDragEnter"
-      @dragleave="onDragLeave"
       @drop.prevent="onDrop($event)"
       @dragover.prevent=""
     >
@@ -22,6 +20,8 @@
         }"
         for="file-upload"
         v-bind:style="{backgroundImage: `url(${image})`}"
+        @dragenter="onDragEnter"
+        @dragleave="onDragLeave"
       >
         <p v-if="advancedUpload && !loading">
           Drop image<br/>
@@ -146,9 +146,23 @@ export default {
     background-position: top center;
     background-clip: content-box;
     padding: 4px;
+    cursor: pointer;
+    transition: background-color 300ms ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.75);
+    }
+
+    &.active {
+      background-color: rgba(255, 255, 255, 0.75);
+    }
 
     span {
       color: #485F6C;
+    }
+
+    p {
+      pointer-events: none;
     }
 
     // padding trick to scale proportionally 8.5 : 5.5
@@ -173,7 +187,6 @@ export default {
     top: 0;
     left: 0;
     background-color: rgba(255, 255, 255, 0.75);
-
     display: flex;
     align-items: center;
     justify-content: center;
