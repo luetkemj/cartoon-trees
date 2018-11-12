@@ -1,5 +1,3 @@
-https://css-tricks.com/drag-and-drop-file-uploading/
-
 <template>
   <div v-bind:class="$style.container">
     <form
@@ -23,22 +21,30 @@ https://css-tricks.com/drag-and-drop-file-uploading/
           [$style.active]: draggingFileOverTarget,
         }"
         for="file-upload"
+        v-bind:style="{backgroundImage: `url(${image})`}"
       >
-        <p v-if="advancedUpload">
+        <p v-if="advancedUpload && !loading">
           Drop image<br/>
           here<br/>
           or <span>click</span> to<br/>
           plant a<br/>
           Tree
         </p>
-        <p v-else>
+        <p v-if="!advancedUpload && !loading">
           <span>click</span> to<br/>
           plant a<br/>
           Tree
         </p>
+
+        <div
+          v-if="loading"
+          v-bind:class="$style.loading"
+        >
+          <div v-bind:class="$style.spinner"/>
+        </div>
       </label>
     </form>
-    <p v-if="loading">LOADING</p>
+
     <p v-if="error">{{error}}</p>
   </div>
 </template>
@@ -92,8 +98,10 @@ export default {
             method: 'POST',
             body: JSON.stringify({ file: b64Trimmed }),
           });
+          this.image = '';
           return this.loading = false;
         } catch (e) {
+          this.image = '';
           this.error = e.message;
           return this.loading = false;
         }
@@ -125,16 +133,19 @@ export default {
 
   .label {
     display: block;
+    position: relative;
     width: calc(100% - 32px);
     margin: 41px 16px 0 16px;
     border: 1px dashed #979797;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     font-size: 18px;
     line-height: 24px;
+    background-size: cover;
+    background-position: top center;
+    background-clip: content-box;
+    padding: 4px;
 
     span {
       color: #485F6C;
@@ -152,6 +163,41 @@ export default {
       content: '';
       display: block;
       clear: both;
+    }
+  }
+
+  .loading {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.75);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    background-image: url('../assets/spinner.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    animation: spin 700ms linear infinite;
+  }
+
+  :global {
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
   }
 </style>
