@@ -30,6 +30,8 @@ h1 {
 
 
 <style module lang="scss">
+@import '~normalize.css';
+
 .app {
   // @todo: use @2x bg here
   background-image: url('./assets/beige_paper.png');
