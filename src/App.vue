@@ -52,5 +52,6 @@ h1 {
 
 .view {
   flex-grow: 1;
+  padding: 20px;
 }
 </style>

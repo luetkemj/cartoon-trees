@@ -52,6 +52,7 @@ export default {
 
 .trees {
   background: url('../assets/tree.svg');
+  background-position: center center;
   background-repeat: space;
   width: 300px;
   height: 54px;

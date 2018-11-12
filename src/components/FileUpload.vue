@@ -1,9 +1,10 @@
 <template>
-  <div class="$style.container">
-    <form action="">
-      <h1>Add New Page</h1>
+  <div v-bind:class="$style.container">
+    <form v-bind:class="$style.form" action="">
       <input
         type="file"
+        name="file-upload"
+        id="file-upload"
         v-bind:class="{
           [$style.fileUpload]: true,
           [$style.active]: draggingFileOverTarget,
@@ -13,11 +14,18 @@
         @dragleave="onDragLeave"
         @drop="onDrop"
       />
+      <label v-bind:class="$style.label" for="file-upload">
+        <p>
+          Drop image<br/>
+          here<br/>
+          or <span>click</span> to<br/>
+          plant a<br/>
+          Tree
+        </p>
+      </label>
     </form>
     <p v-if="loading">LOADING</p>
     <p v-if="error">{{error}}</p>
-
-    <img v-bind:src="image" />
   </div>
 </template>
 
@@ -79,24 +87,52 @@ export default {
 </script>
 
 <style module lang="scss">
-  .container {
-    background: blue;
+  // .container {}
+
+  .form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .fileUpload {
-    width: 500px;
-    height: 100px;
-    border: 1px dashed blue;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+
+  .label {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 41px 16px 0 16px;
+    border: 1px dashed #979797;
+
     display: flex;
     align-items: center;
     justify-content: center;
 
-    &:hover {
-      background: red;
+    font-size: 18px;
+    line-height: 24px;
+
+    span {
+      color: #485F6C;
     }
 
-    &.active {
-      background: green;
+    // padding trick to scale proportionally 8.5 : 5.5
+    // (half sheet of letter or traditonal zine proportions)
+    &::before {
+      content: '';
+      padding-top: calc(154.54545454555% - 32px);
+      float: left;
+    }
+
+    &::after {
+      content: '';
+      display: block;
+      clear: both;
     }
   }
 </style>
