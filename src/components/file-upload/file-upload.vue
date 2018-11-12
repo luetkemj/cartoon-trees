@@ -14,51 +14,27 @@
         @drop="onDrop"
       />
     </form>
-    {{file}}
+    <p v-if="loading">LOADING</p>
+    <p v-if="error">{{error}}</p>
+
     <img v-bind:src="image" />
   </div>
 </template>
 
 <script>
-
-const uploadFile = async (file) => {
-  const reader = new FileReader();
-
-  reader.addEventListener('load', async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/upload-image', {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-        body: JSON.stringify({ file: reader.result.replace('data:image/png;base64,', '') }),
-      });
-
-      const json = await response.json();
-      console.log(json);
-      return json;
-    } catch (e) {
-      return console.log({ error: e.message });
-    }
-  }, false);
-
-  if (file) {
-    reader.readAsDataURL(file);
-  }
-};
-
 export default {
   name: 'fileUploader',
   data: () => ({
     file: '',
     draggingFileOverTarget: false,
     image: '',
+    loading: false,
+    error: null,
   }),
   methods: {
-    onChange(e) {
+    async onChange(e) {
       this.file = e.target.value;
-      uploadFile(e.srcElement.files[0]);
+      await this.uploadFile(e.srcElement.files[0]);
     },
     onDragEnter() {
       this.draggingFileOverTarget = true;
@@ -68,6 +44,35 @@ export default {
     },
     onDrop() {
       this.draggingFileOverTarget = false;
+    },
+    async uploadFile(file) {
+      const reader = new FileReader();
+      this.loading = true;
+      this.error = null;
+
+      await reader.addEventListener('load', async () => {
+        const b64Data = reader.result;
+        this.image = b64Data; // eslint-disable-line
+        const b64Trimmed = b64Data.replace('data:image/png;base64,', '');
+        try {
+          await fetch('http://localhost:3000/api/upload-image', {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify({ file: b64Trimmed }),
+          });
+          return this.loading = false;
+        } catch (e) {
+          this.error = e.message;
+          return this.loading = false;
+        }
+      }, false);
+
+      if (file) {
+        reader.readAsDataURL(file);
+      }
     },
   },
 };
