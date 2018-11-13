@@ -54,6 +54,16 @@ import { localRequest } from '../mixins/http';
 
 export default {
   name: 'fileUploader',
+  props: {
+    root: {
+      type: Boolean,
+      default: false,
+    },
+    parent: {
+      type: String,
+      default: '',
+    },
+  },
   data: () => ({
     file: '',
     draggingFileOverTarget: false,
@@ -95,7 +105,11 @@ export default {
           const uri = 'http://localhost:3000/api/upload-image';
           const options = {
             method: 'POST',
-            body: JSON.stringify({ file: b64Trimmed }),
+            body: JSON.stringify({
+              file: b64Trimmed,
+              root: this.$props.root,
+              parent: this.$props.parent,
+            }),
           };
           await localRequest(uri, options);
           this.image = '';

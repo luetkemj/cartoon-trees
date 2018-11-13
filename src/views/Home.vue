@@ -5,7 +5,7 @@
     <Thumbnail />
     <Thumbnail />
     <Thumbnail />
-    <FileUpload />
+    <FileUpload root="true" />
   </div>
 </template>
 
