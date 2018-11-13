@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import { localRequest } from '../mixins/http';
+
 export default {
   name: 'fileUploader',
   data: () => ({
@@ -90,14 +92,12 @@ export default {
         this.image = b64Data; // eslint-disable-line
         const b64Trimmed = b64Data.replace('data:image/png;base64,', '');
         try {
-          await fetch('http://localhost:3000/api/upload-image', {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
+          const uri = 'http://localhost:3000/api/upload-image';
+          const options = {
             method: 'POST',
             body: JSON.stringify({ file: b64Trimmed }),
-          });
+          };
+          await localRequest(uri, options);
           this.image = '';
           return this.loading = false;
         } catch (e) {

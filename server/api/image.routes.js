@@ -16,7 +16,7 @@ const uploadImage = async (req, res) => {
     const response = await imgurRequest(url, config);
     return res.send({ data: response.data });
   } catch (e) {
-    return res.status(500).send({ error: e.message });
+    return res.status(e.response.status).send({ message: e.response.statusText });
   }
 };
 
