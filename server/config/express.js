@@ -22,15 +22,9 @@ app.use(bodyParser.json({ limit: '10mb' }));
  * ------------------------------------------ */
 
 const router = new express.Router();
-const routes = require('./routes');
+const routes = require('../routes');
 
 routes(router);
 app.use(router);
 
-app.listen(3000, (err) => {
-  if (err) {
-    console.log(err);
-  }
-
-  console.log(`Express server listening on port 3000 in ${process.env.NODE_ENV} environment`);
-});
+module.exports = app;
