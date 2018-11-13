@@ -6,18 +6,16 @@ const logger = require('../lib/logger')();
 
 const Page = mongoose.model('Page');
 
-const imgurRequest = (url, config) => {
-  return axios({
-    url,
-    headers: {
-      Authorization: `Client-ID ${process.env.IMGUR_CLIENT_ID}`,
-    },
-    ...config,
-  });
-};
+const imgurRequest = (url, config) => axios({
+  url,
+  headers: {
+    Authorization: `Client-ID ${process.env.IMGUR_CLIENT_ID}`,
+  },
+  ...config,
+});
 
 const uploadImage = async (req, res) => {
-  logger.log('preparing to upload image to imgur: 👍');
+  logger.log('uploadImage: preparing to upload image to imgur: 👍');
 
   const { file, parent, root } = req.body;
 
@@ -30,8 +28,11 @@ const uploadImage = async (req, res) => {
   };
 
   try {
-    logger.log('uploadImage: uploading image to imgur: 👍');
+    logger.log('uploadImage: uploading to imgur: 👍');
     const imgurResponse = await imgurRequest(url, config);
+    logger.log('uploadImage: uploaded to imgur: 👍');
+
+    logger.log('uploadImage: preparing to save to database: 👍');
     const image = imgurResponse.data.data;
 
     const docs = {
@@ -40,19 +41,20 @@ const uploadImage = async (req, res) => {
       root, // is this page a root?
     };
 
+    logger.log('uploadImage: saving to database: 👍');
     const data = await Page.create(docs);
-    logger.log('uploadImage: createPage: 👍');
+    logger.log('uploadImage: saved to database: 👍');
 
     return res.send({ data });
   } catch (e) {
-    logger.error('uploadImage: Error! ❌');
-    logger.error(e);
-    return res.status(500).send(e);
-    // return res.status(e.response.status).send({ message: e.response.statusText });
+    const { response: { status, statusText } } = e;
+
+    logger.error('uploadImage: ', { status, statusText });
+    return res.status(status).send({ message: statusText });
   }
 };
 
-// const getRootPages = async
+// const getRootPages = async (req, res)
 
 module.exports = (router) => {
   router.route('/api/upload-image').post(uploadImage);
