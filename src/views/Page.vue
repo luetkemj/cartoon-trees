@@ -5,8 +5,18 @@
       <img :class="$style.image" :src="store.state.page.image.link" />
     </div>
 
-    <!-- <div>Child pages</div> -->
-    <!-- <div>FileUpload with this as parent</div> -->
+    <div :class="$style.content">
+      <!-- <router-link
+        v-for="page in store.state.rootPages"
+        :key="page._id"
+        :to="{ name: 'page', params: { id: page._id }}"
+      >
+        <Thumbnail
+          :image="page.image.link"
+        />
+      </router-link> -->
+      <FileUpload :parent="$route.params.id" />
+    </div>
   </div>
 </template>
 
@@ -14,12 +24,16 @@
 import store from '@/store';
 import { localRequest } from '@/mixins/http';
 
+import FileUpload from '@/components/FileUpload.vue';
+
 export default {
   name: 'page',
+  components: {
+    FileUpload,
+  },
   data: () => ({
     store,
   }),
-
   async created() {
     console.log(this.$route.params.id);
     await this.getPage(this.$route.params.id);
@@ -50,5 +64,20 @@ export default {
   .image {
     width: 100%;
     height: auto;
+  }
+
+  .content {
+    width: calc(100% - 40px);
+    max-width: 1024px;
+    margin: 0 auto;
+    display: grid;
+    grid-column-gap: 16px;
+    grid-row-gap: 16px;
+
+    @media (min-width: 921px) { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+    @media (max-width: 920px) { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    @media (max-width: 730px) { grid-template-columns: 1fr 1fr 1fr; }
+    @media (max-width: 580px) { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 370px) { grid-template-columns: 1fr; }
   }
 </style>
