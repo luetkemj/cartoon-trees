@@ -17,5 +17,6 @@ export function checkHttpStatus(response) {
 export const localRequest = async (uri, options) => {
   const response = await fetch(uri, { ...FETCH_DEFAULT_OPTIONS, ...options });
   checkHttpStatus(response);
-  await response.json();
+  const data = await response.json();
+  return data;
 };

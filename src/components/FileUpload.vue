@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { localRequest } from '../mixins/http';
+import { localRequest } from '@/mixins/http';
 
 export default {
   name: 'fileUploader',

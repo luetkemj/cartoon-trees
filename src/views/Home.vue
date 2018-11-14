@@ -1,11 +1,11 @@
 <template>
   <div v-bind:class="$style.home">
-    <Thumbnail />
-    <Thumbnail />
-    <Thumbnail />
-    <Thumbnail />
-    <Thumbnail />
-    <FileUpload root="true" />
+    <Thumbnail
+      v-for="page in pages"
+      :key="page._id"
+      :image="page.image.link"
+    />
+    <FileUpload root />
   </div>
 </template>
 
@@ -13,12 +13,35 @@
 // @ is an alias to /src
 import FileUpload from '@/components/FileUpload.vue';
 import Thumbnail from '@/components/Thumbnail.vue';
+import { localRequest } from '@/mixins/http';
+
 
 export default {
   name: 'home',
   components: {
     FileUpload,
     Thumbnail,
+  },
+  data: () => ({
+    pages: [],
+    loading: true,
+  }),
+  async created() {
+    await this.getRootPages();
+  },
+  methods: {
+    async getRootPages() {
+      try {
+        const uri = 'http://localhost:3000/api/root-pages';
+        const options = { method: 'GET' };
+        const data = await localRequest(uri, options);
+        this.loading = false;
+        return this.pages = data.data;
+      } catch (e) {
+        this.loading = false;
+        return this.error = e.message;
+      }
+    },
   },
 };
 </script>

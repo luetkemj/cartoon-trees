@@ -54,8 +54,21 @@ const uploadImage = async (req, res) => {
   }
 };
 
-// const getRootPages = async (req, res)
+const getRootPages = async (req, res) => {
+  logger.log('getRootPages: prepearing to get root pages');
+
+  try {
+    const data = await Page.find({ root: true }).exec();
+    logger.log('getRootPages: from database: 👍');
+    return res.send({ data });
+  } catch (e) {
+    const { response: { status, statusText } } = e;
+    logger.error('getRootPages: ', { status, statusText });
+    return res.status(status).send({ message: statusText });
+  }
+};
 
 module.exports = (router) => {
   router.route('/api/upload-image').post(uploadImage);
+  router.route('/api/root-pages').get(getRootPages);
 };
