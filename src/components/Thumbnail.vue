@@ -22,7 +22,7 @@ export default {
     background-color: #ffffff;
     box-shadow: inset -2px -2px 0 0 #979797;
     background-size: cover;
-    background-position: top left;
+    background-position: center center;
 
     // padding trick to scale proportionally 8.5 : 5.5
     // (half sheet of letter or traditonal zine proportions)

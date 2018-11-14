@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import store from '@/store';
 import { localRequest } from '@/mixins/http';
 
 export default {
@@ -111,7 +112,10 @@ export default {
               parent: this.$props.parent,
             }),
           };
-          await localRequest(uri, options);
+          const data = await localRequest(uri, options);
+          if (this.props.root) {
+            store.addRootPages(data.data);
+          }
           this.image = '';
           return this.loading = false;
         } catch (e) {
