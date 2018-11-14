@@ -5,6 +5,20 @@
       <img :class="$style.image" :src="store.state.page.image.link" />
     </div>
 
+    <div :class="$style.nav">
+      <router-link
+        v-if="store.state.page.parent"
+        :class="$style.navLink"
+        :to="{ name: 'page', params: { id: store.state.page.parent }}"
+      >parent page</router-link>
+
+      <router-link
+        v-else
+        :class="$style.navLink"
+        to="/"
+      >Home</router-link>
+    </div>
+
     <div :class="$style.content">
       <router-link
         v-for="page in store.state.page.children"
@@ -69,6 +83,22 @@ export default {
   .image {
     width: 100%;
     height: auto;
+  }
+
+  .nav {
+    max-width: 1024px;
+    text-align: left;
+    margin: 8px auto 44px auto;
+  }
+
+  .navLink {
+    text-decoration: none;
+    color: #485F6C;
+    transition: opacity 150ms ease;
+
+    &:hover {
+      opacity: 0.9;
+    }
   }
 
   .content {
