@@ -101,7 +101,8 @@ export default {
       await reader.addEventListener('load', async () => {
         const b64Data = reader.result;
         this.image = b64Data; // eslint-disable-line
-        const b64Trimmed = b64Data.replace('data:image/png;base64,', '');
+        const regex = /data:image\/(png|jpeg|jpg|gif);base64,/g;
+        const b64Trimmed = b64Data.replace(regex, '');
         try {
           const uri = 'http://localhost:3000/api/upload-image';
           const options = {
@@ -113,7 +114,8 @@ export default {
             }),
           };
           const data = await localRequest(uri, options);
-          if (this.props.root) {
+
+          if (this.$props.root) {
             store.addRootPages(data.data);
           }
           this.image = '';
