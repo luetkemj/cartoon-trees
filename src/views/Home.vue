@@ -2,11 +2,15 @@
   <div :class="$style.home">
     <div v-if="store.state.loadingRootPages" :class="$style.loading">LOADING</div>
     <div v-else :class="$style.content">
-      <Thumbnail
+      <router-link
         v-for="page in store.state.rootPages"
         :key="page._id"
-        :image="page.image.link"
-      />
+        :to="{ name: 'page', params: { id: page._id }}"
+      >
+        <Thumbnail
+          :image="page.image.link"
+        />
+      </router-link>
       <FileUpload root />
     </div>
   </div>
