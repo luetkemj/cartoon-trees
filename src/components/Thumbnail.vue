@@ -23,6 +23,7 @@ export default {
     box-shadow: inset -2px -2px 0 0 #979797;
     background-size: cover;
     background-position: center center;
+    transition: transform 150ms ease, box-shadow 150ms ease;
 
     // padding trick to scale proportionally 8.5 : 5.5
     // (half sheet of letter or traditonal zine proportions)
@@ -36,6 +37,11 @@ export default {
       content: '';
       display: block;
       clear: both;
+    }
+
+    &:hover {
+      transform: scale(1.01);
+      box-shadow: inset 0px 0px 0 1px #F8E71C;
     }
   }
 </style>
