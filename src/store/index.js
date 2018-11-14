@@ -21,6 +21,11 @@ const store = {
     this.state.page = newValue;
   },
 
+  addChildToPage(newValue) {
+    console.log('addChildToPage', newValue);
+    this.state.page.children.push(newValue);
+  },
+
   setLoadingRootPages(newValue) {
     console.log('setLoadingRootPages', newValue);
     this.state.loadingRootPages = newValue;

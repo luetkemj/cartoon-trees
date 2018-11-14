@@ -117,7 +117,11 @@ export default {
 
           if (this.$props.root) {
             store.addRootPages(data.data);
+          } else {
+            store.addChildToPage(data.data);
           }
+
+
           this.image = '';
           return this.loading = false;
         } catch (e) {
