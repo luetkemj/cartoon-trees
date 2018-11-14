@@ -73,8 +73,20 @@ const getPage = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const data = await Page.findById(id).exec();
+    const [page, children] = await Promise.all([
+      Page.findById(id).exec(),
+      Page.find({ parent: id }).exec(),
+    ]);
     logger.log('getPage: from database: 👍');
+
+    const data = {
+      _id: page._id, // eslint-disable-line
+      image: page.image,
+      parent: page.parent,
+      root: page.root,
+      children,
+    };
+
     return res.send({ data });
   } catch (e) {
     const { response: { status, statusText } } = e;

@@ -6,15 +6,15 @@
     </div>
 
     <div :class="$style.content">
-      <!-- <router-link
-        v-for="page in store.state.rootPages"
+      <router-link
+        v-for="page in store.state.page.children"
         :key="page._id"
         :to="{ name: 'page', params: { id: page._id }}"
       >
         <Thumbnail
           :image="page.image.link"
         />
-      </router-link> -->
+      </router-link>
       <FileUpload :parent="$route.params.id" />
     </div>
   </div>
@@ -25,23 +25,28 @@ import store from '@/store';
 import { localRequest } from '@/mixins/http';
 
 import FileUpload from '@/components/FileUpload.vue';
+import Thumbnail from '@/components/Thumbnail.vue';
 
 export default {
   name: 'page',
   components: {
     FileUpload,
+    Thumbnail,
   },
   data: () => ({
     store,
   }),
   async created() {
-    console.log(this.$route.params.id);
-    await this.getPage(this.$route.params.id);
+    await this.getPage();
+  },
+  watch: {
+    // call again the method if the route changes
+    $route: 'getPage',
   },
   methods: {
-    async getPage(id) {
+    async getPage() {
       try {
-        const uri = `http://localhost:3000/api/page/${id}`;
+        const uri = `http://localhost:3000/api/page/${this.$route.params.id}`;
         const options = { method: 'GET' };
         const data = await localRequest(uri, options);
         store.setLoadingPage(false);
