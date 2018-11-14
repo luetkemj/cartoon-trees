@@ -1,7 +1,14 @@
 <template>
   <div v-bind:class="$style.header">
     <div v-bind:class="$style.trees"></div>
-    <h1 v-bind:class="$style.logo">Cartoon<br/> Trees</h1>
+
+    <router-link
+      :class="$style.homeLink"
+      to="/"
+    >
+      <h1 v-bind:class="$style.logo">Cartoon<br/> Trees</h1>
+    </router-link>
+
     <div v-bind:class="$style.trees"></div>
   </div>
 </template>
@@ -18,6 +25,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.homeLink {
+  text-decoration: none;
 }
 
 .logo {
