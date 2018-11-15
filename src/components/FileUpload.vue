@@ -27,8 +27,8 @@
           Drop image<br/>
           here<br/>
           or <span>click</span> to<br/>
-          plant a<br/>
-          Tree
+          add a new<br/>
+          page
         </p>
         <p v-if="!advancedUpload && !loading">
           <span>click</span> to<br/>
