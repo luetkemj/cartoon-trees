@@ -59,6 +59,7 @@ export default {
   },
   methods: {
     async getPage() {
+      store.setLoadingPage(true);
       try {
         const uri = `http://localhost:3000/api/page/${this.$route.params.id}`;
         const options = { method: 'GET' };
